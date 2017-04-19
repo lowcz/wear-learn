@@ -8,12 +8,31 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.example.wearlearn.MainActivity">
+    tools:context="com.example.wearlearn.MenuActivity">
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Hello World!"
         android:id="@+id/textView" />
+
+    <Button
+        android:text="Tags"
+        android:onClick="openTagList"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textView"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="47dp"
+        android:layout_marginTop="39dp"
+        android:id="@+id/btn_tag" />
+
+    <TextView
+        android:text=""
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/btn_tag"
+        android:layout_marginTop="42dp"
+        android:id="@+id/tagList" />
 
 </RelativeLayout>
