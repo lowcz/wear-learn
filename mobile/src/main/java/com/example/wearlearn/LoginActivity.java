@@ -19,7 +19,9 @@ import java.io.IOException;
 import Interfaces.Login;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import okhttp3.OkHttpClient;
 import okhttp3.ResponseBody;
+import okhttp3.logging.HttpLoggingInterceptor;
 import pojo.LoginDataBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -68,12 +70,12 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public void login() {
-        Log.d(TAG, "Login");
+        Log.d(TAG, "LoginStart");
 
-        if (!validate()) {
-            onLoginFailed();
-            return;
-        }
+        //if (!validate()) {
+        //    onLoginFailed();
+        //    return;
+        //}
 
         _loginButton.setEnabled(false);
 
@@ -88,23 +90,38 @@ public class LoginActivity extends AppCompatActivity {
 //-----------------------------------------------------------------------------
         // TODO: Implement authentication logic here.
 
+        HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
+        // set your desired log level
+        logging.setLevel(HttpLoggingInterceptor.Level.BODY);
+
+        OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
+        // add your other interceptors …
+
+        // add logging as last interceptor
+        httpClient.addInterceptor(logging);  // <-- this is the important line!
+
+
+
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(ADDRESS)
                 .addConverterFactory(GsonConverterFactory.create())
+                .client(httpClient.build())
                 .build();
         Login webService = retrofit.create(Login.class);
-        Call<ResponseBody> call = webService.postData(new LoginDataBody("adi", "1234"));
+        //Call<ResponseBody> call = webService.postData(new LoginDataBody("adi", "1234"));
+        Call<ResponseBody> call = webService.postData("1234", "adi");
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if (response.isSuccessful()) {
-                    String stringResponse="";
+                    String stringResponse;
                       try {
                     // get String from response
                     stringResponse = response.body().string();
                     // Do whatever you want with the String
                       } catch (IOException e) {
                         e.printStackTrace();
+                          stringResponse="";
                      }
                     Log.d("LOGIN",response.code() +"\n" + stringResponse);
                     progressDialog.dismiss();

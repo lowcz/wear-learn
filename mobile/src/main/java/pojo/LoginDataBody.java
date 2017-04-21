@@ -6,8 +6,8 @@ package pojo;
 
 public class LoginDataBody {
 
-    private String username;
-    private String password;
+    public String username;
+    public String password;
 
 
     public LoginDataBody(String username, String password) {
