@@ -6,12 +6,15 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.http.Body;
 import retrofit2.http.POST;
+import retrofit2.http.Query;
 
 /**
  * Created by Michał on 4/19/2017.
  */
 
 public interface Login {
-    @POST("login/")
+    //@POST("login/")
+    //Call<ResponseBody> postData(@Body LoginDataBody data);
+    @POST("login")
     Call<ResponseBody> postData(@Body LoginDataBody data);
 }

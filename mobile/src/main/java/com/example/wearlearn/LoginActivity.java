@@ -1,8 +1,10 @@
 package com.example.wearlearn;
 
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.util.Patterns;
@@ -28,7 +30,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class LoginActivity extends AppCompatActivity {
     private static final String TAG = "LoginActivity";
     private static final int REQUEST_SIGNUP = 0;
-    private static final String ADDRESS = "http://172.16.45.61:8080/";
+    private static final String ADDRESS = "http://wl-api.herokuapp.com/";
 
     @InjectView(R.id.input_email)
     EditText _emailText;
@@ -86,41 +88,59 @@ public class LoginActivity extends AppCompatActivity {
 //-----------------------------------------------------------------------------
         // TODO: Implement authentication logic here.
 
-        new android.os.Handler().postDelayed(
-                new Runnable() {
-                    public void run() {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(ADDRESS)
-                .addConverterFactory(GsonConverterFactory.create())//***
+                .addConverterFactory(GsonConverterFactory.create())
                 .build();
         Login webService = retrofit.create(Login.class);
-        Call<ResponseBody> call = webService.postData(new LoginDataBody("adi","1234"));
+        Call<ResponseBody> call = webService.postData(new LoginDataBody("adi", "1234"));
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if (response.isSuccessful()) {
-                  //  try {
-                        // get String from response
-                        //String stringResponse = response.body().string();
-                        // Do whatever you want with the String
-                  //  } catch (IOException e) {
-                    //    e.printStackTrace();
-                   // }
-                    Log.d("LOGIN",response.code() +" ");
+                    String stringResponse="";
+                      try {
+                    // get String from response
+                    stringResponse = response.body().string();
+                    // Do whatever you want with the String
+                      } catch (IOException e) {
+                        e.printStackTrace();
+                     }
+                    Log.d("LOGIN",response.code() +"\n" + stringResponse);
+                    progressDialog.dismiss();
                     onLoginSuccess();
                 }
             }
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
-                onLoginFailed();
-                Log.d("LOGIN","wyjatek "+);
+
+                Log.d("LOGIN","wyjatek " + t.toString());
+                progressDialog.dismiss();
+                final AlertDialog alertDialog = new AlertDialog.Builder(LoginActivity.this).create();
+                alertDialog.setTitle("Error");
+                alertDialog.setMessage("Wrong username or password, try again!");
+                alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        });
+                alertDialog.show();
+
+                new android.os.Handler().postDelayed(
+                        new Runnable() {
+                            public void run() {
+                                alertDialog.dismiss();
+                                onLoginFailed();
+                            }
+                        }, 3000);
+
+
 
             }
         });
 
-                    }
-                }, 3000);
     }
 
 /*
@@ -136,23 +156,6 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 */
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == REQUEST_SIGNUP) {
-            if (resultCode == RESULT_OK) {
-
-                // TODO: Implement successful signup logic here
-                this.finish();
-            }
-        }
-    }
-
-    @Override
-    public void onBackPressed() {
-        // Disable going back to the MainActivity
-        moveTaskToBack(true);
-    }
 
     public void onLoginSuccess() {
         _loginButton.setEnabled(true);

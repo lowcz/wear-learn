@@ -6,28 +6,28 @@ package pojo;
 
 public class LoginDataBody {
 
-    private String USERNAME;
-    private String PASSWORD;
+    private String username;
+    private String password;
 
 
     public LoginDataBody(String username, String password) {
-        this.USERNAME = username;
-        this.PASSWORD = password;
+        this.username = username;
+        this.password = password;
     }
 
     public String getUserName() {
-        return USERNAME;
+        return username;
     }
 
     public void setUserName(String name) {
-        this.USERNAME = name;
+        this.username = name;
     }
 
     public String getPassword() {
-        return PASSWORD;
+        return password;
     }
 
     public void setPassword(String name) {
-        this.PASSWORD = name;
+        this.password = name;
     }
 }

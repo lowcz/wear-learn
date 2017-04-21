@@ -55,7 +55,8 @@ public class MenuActivity extends AppCompatActivity {
                 for(int i=0; i<tagCount; i++)
                     tempTagsList += result.get(i) + "\n";
                 _tagList.setText(tempTagsList);
-                _tagButton.setText(result.get(0));
+                if (tagCount>0)
+                    _tagButton.setText(result.get(0));
             }
     }
 
