@@ -16,16 +16,18 @@ import android.widget.Toast;
 
 import java.io.IOException;
 
-import Interfaces.Login;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+
 import okhttp3.ResponseBody;
-import pojo.LoginDataBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
+
+import Interfaces.Login;
+import wrappers.RetrofitWrapper;
+
 
 public class LoginActivity extends AppCompatActivity {
     private static final String TAG = "LoginActivity";
@@ -86,26 +88,25 @@ public class LoginActivity extends AppCompatActivity {
         String email = _emailText.getText().toString();
         String password = _passwordText.getText().toString();
 //-----------------------------------------------------------------------------
-        // TODO: Implement authentication logic here.
 
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(ADDRESS)
-                .addConverterFactory(GsonConverterFactory.create())
+        RetrofitWrapper retro = new RetrofitWrapper(ADDRESS, GsonConverterFactory.create())
+                .enableCookies()
+                .enableLogging()
                 .build();
-        Login webService = retrofit.create(Login.class);
-        Call<ResponseBody> call = webService.postData(new LoginDataBody("adi", "1234"));
+        Login webService = retro.getRetrofit().create(Login.class);
+
+        Call<ResponseBody> call = webService.postData("adi", "1234");
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if (response.isSuccessful()) {
-                    String stringResponse="";
+                    String stringResponse;
                       try {
-                    // get String from response
                     stringResponse = response.body().string();
-                    // Do whatever you want with the String
                       } catch (IOException e) {
-                        e.printStackTrace();
+                          stringResponse="error occured: \n" + e.toString();
                      }
+                    //TODO check response for authentication status
                     Log.d("LOGIN",response.code() +"\n" + stringResponse);
                     progressDialog.dismiss();
                     onLoginSuccess();
@@ -119,7 +120,7 @@ public class LoginActivity extends AppCompatActivity {
                 progressDialog.dismiss();
                 final AlertDialog alertDialog = new AlertDialog.Builder(LoginActivity.this).create();
                 alertDialog.setTitle("Error");
-                alertDialog.setMessage("Wrong username or password, try again!");
+                alertDialog.setMessage("Could not connect with server, please try again!");
                 alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
@@ -142,20 +143,6 @@ public class LoginActivity extends AppCompatActivity {
         });
 
     }
-
-/*
-        new android.os.Handler().postDelayed(
-                new Runnable() {
-                    public void run() {
-                        // On complete call either onLoginSuccess or onLoginFailed
-                        onLoginSuccess();
-                        // onLoginFailed();
-                        progressDialog.dismiss();
-                    }
-                }, 3000);
-
-    }
-*/
 
     public void onLoginSuccess() {
         _loginButton.setEnabled(true);
