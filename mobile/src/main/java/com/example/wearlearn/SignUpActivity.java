@@ -1,8 +1,10 @@
 package com.example.wearlearn;
 
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -11,11 +13,23 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.IOException;
+
+import okhttp3.ResponseBody;
+import pojo.RegisterDataBody;
+import Interfaces.Authentication;
+
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.converter.gson.GsonConverterFactory;
+import wrappers.RetrofitWrapper;
 
 public class SignUpActivity extends AppCompatActivity {
     private static final String TAG = "SignupActivity";
+    private static final String ADDRESS = "http://wl-api.herokuapp.com/";
 
     @InjectView(R.id.input_name) EditText _nameText;
     @InjectView(R.id.input_email) EditText _emailText;
@@ -42,6 +56,7 @@ public class SignUpActivity extends AppCompatActivity {
             public void onClick(View v) {
                 // Finish the registration screen and return to the Login activity
                 Intent intent = new Intent(getApplicationContext(),LoginActivity.class);
+                setResult(RESULT_CANCELED, null);
                 startActivity(intent);
                 finish();
             }
@@ -67,33 +82,87 @@ public class SignUpActivity extends AppCompatActivity {
         String name = _nameText.getText().toString();
         String email = _emailText.getText().toString();
         String password = _passwordText.getText().toString();
-        String reEnterPassword = _reEnterPasswordText.getText().toString();
 
-        // TODO: Implement signup logic here.
 
-        new android.os.Handler().postDelayed(
-                new Runnable() {
-                    public void run() {
-                        // On complete call either onSignupSuccess or onSignupFailed
-                        // depending on success
-                        onSignupSuccess();
-                        // onSignupFailed();
-                        progressDialog.dismiss();
+        RetrofitWrapper retro = new RetrofitWrapper(ADDRESS, GsonConverterFactory.create())
+                .enableCookies()
+                .enableLogging()
+                .build();
+        Authentication webService = retro.getRetrofit().create(Authentication.class);
+
+        Call<ResponseBody> call = webService.postData(new RegisterDataBody(name, password, email));
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.isSuccessful()) {
+                    String stringResponse;
+                    try {
+                        stringResponse = response.body().string();
+                    } catch (IOException e) {
+                        stringResponse="error occurred: \n" + e.toString();
                     }
-                }, 3000);
+                    Log.d("LOGIN",response.code() +"\n" + stringResponse);
+                    progressDialog.dismiss();
+                    if(response.code()==200)
+                        onSignupSuccess();
+                    else
+                        onSignupFailed();
+                }
+                else
+                {
+                    Log.d("LOGIN", " response not successful");
+                    progressDialog.dismiss();
+                    onSignupFailed();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+                Log.d("LOGIN","wyjatek " + t.toString());
+                progressDialog.dismiss();
+                final AlertDialog alertDialog = new AlertDialog.Builder(SignUpActivity.this).create();
+                alertDialog.setTitle("Error");
+                alertDialog.setMessage("Could not connect with server, please try again!");
+                alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        });
+                alertDialog.show();
+                while (alertDialog.isShowing()) {
+                    new android.os.Handler().postDelayed(
+                            new Runnable() {
+                                public void run() {
+                                    if (!alertDialog.isShowing())
+                                        onSignupFailed();
+                                }
+                            }, 500);
+                }
+
+
+            }
+        });
+
     }
 
 
     public void onSignupSuccess() {
         _signupButton.setEnabled(true);
-        Intent intent = new Intent(this, MenuActivity.class);
-        startActivity(intent);
-        setResult(RESULT_OK, null);
+        //Intent intent = new Intent(this, MainActivity.class);
+        //startActivity(intent);
+        Intent intent = new Intent();
+        String user = _nameText.getText().toString();
+        String password = _passwordText.getText().toString();
+        intent.putExtra("user", user);
+        intent.putExtra("password", password);
+        setResult(RESULT_OK, intent);
         finish();
     }
 
     public void onSignupFailed() {
-        Toast.makeText(getBaseContext(), "Login failed", Toast.LENGTH_LONG).show();
+        Toast.makeText(getBaseContext(), "Authentication failed", Toast.LENGTH_LONG).show();
 
         _signupButton.setEnabled(true);
     }
