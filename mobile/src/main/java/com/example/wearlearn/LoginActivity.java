@@ -1,13 +1,11 @@
 package com.example.wearlearn;
 
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -30,11 +28,10 @@ import wrappers.RetrofitWrapper;
 public class LoginActivity extends AppCompatActivity {
     private static final String TAG = "LoginActivity";
     private static final int REQUEST_SIGNUP = 0;
-    private static boolean emailMode = true;
     private static final String ADDRESS = "http://wl-api.herokuapp.com/";
     private ProgressDialog progressDialog;
 
-    @InjectView(R.id.input_email) EditText _emailText;
+    @InjectView(R.id.input_username) EditText _usernameText;
     @InjectView(R.id.input_password) EditText _passwordText;
     @InjectView(R.id.btn_login) Button _loginButton;
     @InjectView(R.id.link_signup) TextView _signupLink;
@@ -63,6 +60,27 @@ public class LoginActivity extends AppCompatActivity {
                 //finish();
             }
         });
+        SharedPreferences sp1=this.getSharedPreferences("Login",0);
+
+        tryAutoLogin();
+    }
+
+    private void tryAutoLogin(){
+        SharedPreferences sp1=this.getSharedPreferences("Login",0);
+
+        String unm=sp1.getString("username", null);
+        String pass = sp1.getString("password", null);
+        if (unm!=null && pass != null) {
+            _passwordText.setText(pass);
+            _usernameText.setText(unm);
+        }
+    }
+    private void saveAutoLoginData(String username, String password){
+        SharedPreferences sp=getSharedPreferences("Login", 0);
+        SharedPreferences.Editor Ed=sp.edit();
+        Ed.putString("username",username );
+        Ed.putString("password",password);
+        Ed.commit();
     }
 
     public void loginButton(){
@@ -76,7 +94,7 @@ public class LoginActivity extends AppCompatActivity {
 
 
 
-        String user = _emailText.getText().toString();
+        String username = _usernameText.getText().toString();
         String password = _passwordText.getText().toString();
         progressDialog = new ProgressDialog(LoginActivity.this,
                 R.style.AppTheme);
@@ -84,10 +102,10 @@ public class LoginActivity extends AppCompatActivity {
         progressDialog.setMessage("Authenticating...");
         progressDialog.show();
 
-        login(user, password);
+        login(username, password);
 
     }
-    private void login(String user, String password) {
+    private void login(String username, String password) {
         Log.d(TAG, "Login");
 
 
@@ -98,7 +116,7 @@ public class LoginActivity extends AppCompatActivity {
                 .build();
         Authentication webService = retro.getRetrofit().create(Authentication.class);
 
-        Call<ResponseBody> call = webService.postData(user, password);
+        Call<ResponseBody> call = webService.postData(username, password);
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
@@ -115,7 +133,10 @@ public class LoginActivity extends AppCompatActivity {
                     if(response.code()==200)
                         onLoginSuccess();
                     else
+                    {
                         onLoginFailed();
+                        Toast.makeText(getBaseContext(), "Login failed", Toast.LENGTH_LONG).show();
+                    }
                 }
                 else
                 {
@@ -123,38 +144,23 @@ public class LoginActivity extends AppCompatActivity {
                     if (progressDialog!=null)
                         progressDialog.dismiss();
                     onLoginFailed();
+                    Toast.makeText(getBaseContext(), "Login failed", Toast.LENGTH_LONG).show();
                 }
             }
 
             @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
+            public void onFailure(Call<ResponseBody> call, Throwable t)
+            {
 
-                Log.d("LOGIN","wyjatek " + t.toString());
-                if (progressDialog!=null)
+                Log.d("LOGIN", "wyjatek " + t.toString());
+                if (progressDialog != null)
                     progressDialog.dismiss();
-                final AlertDialog alertDialog = new AlertDialog.Builder(LoginActivity.this).create();
-                alertDialog.setTitle("Error");
-                alertDialog.setMessage("Could not connect with server, please try again!");
-                alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                            }
-                        });
-                alertDialog.show();
-                while (alertDialog.isShowing()) {
-                    new android.os.Handler().postDelayed(
-                            new Runnable() {
-                                public void run() {
-                                    if (!alertDialog.isShowing())
-                                        onLoginFailed();
-                                }
-                            }, 500);
-                }
-
-
+                onLoginFailed();
+                Toast.makeText(getBaseContext(), "Could not connect with server", Toast.LENGTH_LONG).show();
             }
         });
+
+        saveAutoLoginData(username, password);
 
     }
 
@@ -163,12 +169,16 @@ public class LoginActivity extends AppCompatActivity {
         _loginButton.setEnabled(true);
         Intent intent = new Intent(this, MainActivity.class);
 
+        SharedPreferences sp1=this.getSharedPreferences("Login",0);
+
+
+
         startActivity(intent);
         finish();
     }
 
     public void onLoginFailed() {
-        Toast.makeText(getBaseContext(), "Login failed", Toast.LENGTH_LONG).show();
+
 
         _loginButton.setEnabled(true);
     }
@@ -176,12 +186,8 @@ public class LoginActivity extends AppCompatActivity {
     private boolean validate() {
         boolean valid = true;
 
-        String email = _emailText.getText().toString();
         String password = _passwordText.getText().toString();
 
-        if (email.isEmpty() || !Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            emailMode = false;
-        }
         if (password.isEmpty() || password.length() < 4 || password.length() > 10) {
             _passwordText.setError("between 4 and 10 alphanumeric characters");
             valid = false;

@@ -1,11 +1,15 @@
 package com.example.wearlearn;
 
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -17,17 +21,26 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
+import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import Model.Tag;
-import Model.Word;
+import Interfaces.TagList;
+import butterknife.OnTextChanged;
+import pojo.Tag;
+import pojo.Word;
 import TagsTools.DividerItemDecoration;
 import TagsTools.TagAdapter;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.converter.gson.GsonConverterFactory;
+import wrappers.RetrofitWrapper;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -35,8 +48,12 @@ public class MainActivity extends AppCompatActivity
 
     @InjectView(R.id.recycler_view) RecyclerView _recyclerView;
     @InjectView(R.id.fabLayout) FrameLayout _fabLayout;
+    @InjectView(R.id.search_text) EditText _searchText;
+
     private TagAdapter tagAdapter;
     private List<Tag> tagList = new ArrayList<>();
+    private List<Tag> filteredTagList = new ArrayList<>();
+    private static final String ADDRESS = "http://wl-api.herokuapp.com/";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,7 +66,7 @@ public class MainActivity extends AppCompatActivity
         //***************** Recycler View **********************
         ButterKnife.inject(this);
 
-        tagAdapter = new TagAdapter(tagList, this);
+        tagAdapter = new TagAdapter(filteredTagList, this);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
         _recyclerView.setLayoutManager(mLayoutManager);
         _recyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -66,9 +83,14 @@ public class MainActivity extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //TODO: replace with code that starts new activity with multiple tags passed
-                Snackbar.make(view, "This will open activity with selected tags", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+
+                ArrayList<Tag> sel = tagAdapter.getSelectedTags();
+
+                Intent intent = new Intent(getApplicationContext(), TagActivity.class);
+                intent.putExtra("MULTI", true);
+                intent.putParcelableArrayListExtra("TAG_LIST", sel);
+                startActivity(intent);
+                Log.d("TAGS", tagAdapter.getSelectedTags().toString());
             }
         });
 
@@ -81,6 +103,12 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        SharedPreferences sp1=this.getSharedPreferences("Login",0);
+        String username=sp1.getString("username", null);
+        View header = navigationView.getHeaderView(0);
+        TextView _headerUsername = (TextView) header.findViewById(R.id.header_username);
+        _headerUsername.setText(username);
     }
 
     @Override
@@ -121,18 +149,19 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
+        if (id == R.id.nav_import) {
 
-        } else if (id == R.id.nav_slideshow) {
+        } else if (id == R.id.nav_settings) {
 
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
+        } else if (id == R.id.nav_logout) {
+            SharedPreferences sp=getSharedPreferences("Login", 0);
+            SharedPreferences.Editor Ed=sp.edit();
+            Ed.putString("username",null );
+            Ed.putString("password",null);
+            Ed.commit();
+            Intent intent = new Intent(this, LoginActivity.class);
+            startActivity(intent);
+            finish();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -141,7 +170,10 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void startTag(Tag tag){
-        //TODO: start new activity with selected tag
+        Intent intent = new Intent(getApplicationContext(), TagActivity.class);
+        intent.putExtra("MULTI", false);
+        intent.putExtra("TAG", tag);
+        startActivity(intent);
     }
 
     public void toggleButton(final boolean show){
@@ -172,63 +204,69 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void prepareTagData() {
-        //TODO: get tag list from API.
-        Tag tag = new Tag("kitchen");
+        Tag tag = new Tag("kuchnia", "001");
 
-        Word word = new Word("knife", "nóż");
+        Word word = new Word("knife", "nóż", "");
         tag.addWord(word);
-        word = new Word("fork", "widelec");
+        word = new Word("fork", "widelec", "");
         tag.addWord(word);
-        word = new Word("table", "stół");
+        word = new Word("table", "stół", "");
         tag.addWord(word);
-        word = new Word("spoon", "łyżka");
+        word = new Word("spoon", "łyżka", "");
         tag.addWord(word);
-        word = new Word("pot", "garnek");
+        word = new Word("pot", "garnek", "");
         tag.addWord(word);
-        word = new Word("teaspoon", "łyżeczka");
+        word = new Word("teaspoon", "łyżeczka", "");
         tag.addWord(word);
-
-        tagList.add(tag);
-
-
-        tag = new Tag("food");
-
-        word = new Word("breakfast", "śniadanie");
-        tag.addWord(word);
-        word = new Word("tea", "herbata");
-        tag.addWord(word);
-        word = new Word("cheese", "ser");
-        tag.addWord(word);
-        word = new Word("milk", "mleko");
-        tag.addWord(word);
-        word = new Word("ham", "szynka");
-        tag.addWord(word);
-        word = new Word("onion", "cebula");
+        word = new Word("oven", "piekarnik", "");
         tag.addWord(word);
 
         tagList.add(tag);
 
-        int i=0;
-        while(++i<10) {
-            tag = new Tag("animals "+i);
 
-            word = new Word("bird", "ptak");
-            tag.addWord(word);
-            word = new Word("frog", "żaba");
-            tag.addWord(word);
-            word = new Word("cow", "krowa");
-            tag.addWord(word);
-            word = new Word("fox", "lis");
-            tag.addWord(word);
-            word = new Word("lion", "lew");
-            tag.addWord(word);
-            word = new Word("lizard", "jaszczurka");
-            tag.addWord(word);
 
-            tagList.add(tag);
+        //TODO: get userID from API
+        //String userID = "9aeb6f7a-b469-40bf-a76c-03e4be330a7d";
+        RetrofitWrapper retro = new RetrofitWrapper(ADDRESS, GsonConverterFactory.create())
+                .enableCookies()
+                .enableLogging()
+                .build();
+        TagList webService = retro.getRetrofit().create(TagList.class);
+        //Call<List<Tag>> call = webService.getTags(userID);
+        Call<List<Tag>> call = webService.getTags();
+        call.enqueue(new Callback<List<Tag>>() {
+            @Override
+            public void onResponse(Call<List<Tag>> call, Response<List<Tag>> response) {
+                if (response.isSuccessful())
+                {
+                    tagList.addAll(response.body());
+                    Log.d( "onResponse", tagList.toString());
+                    tagAdapter.notifyDataSetChanged();
+                }
+                else
+                {
+                    Log.d("OnResponseFail", response.toString());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Tag>> call, Throwable t) {
+                Log.d("Failure", t.toString());
+            }
+        });
+
+
+        filteredTagList.addAll(tagList);
+    }
+
+
+    @OnTextChanged(R.id.search_text)
+    void onSearchChanged() {
+        filteredTagList.clear();
+        for (Tag tag : tagList) {
+            if (tag.getName().toLowerCase().contains(_searchText.getText().toString().toLowerCase()))
+                filteredTagList.add(tag);
         }
-
-
         tagAdapter.notifyDataSetChanged();
     }
 

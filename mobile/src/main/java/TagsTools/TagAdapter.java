@@ -7,7 +7,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.wearlearn.MainActivity;
 import com.example.wearlearn.R;
@@ -15,7 +14,7 @@ import com.example.wearlearn.R;
 import java.util.ArrayList;
 import java.util.List;
 
-import Model.Tag;
+import pojo.Tag;
 
 /**
  * Created by pawel on 2017-04-23.
@@ -54,6 +53,14 @@ public class TagAdapter extends RecyclerView.Adapter<TagAdapter.MyViewHolder> {
         return items;
     }
 
+    public ArrayList<Tag> getSelectedTags(){
+        List<Integer> items = getSelectedItems();
+        ArrayList<Tag> sel = new ArrayList<> ();
+        for (Integer i : items)
+            sel.add(tagList.get(items.get(i)));
+        return sel;
+    }
+
 
 
 
@@ -69,8 +76,6 @@ public class TagAdapter extends RecyclerView.Adapter<TagAdapter.MyViewHolder> {
                     public void onClick(View v) {
                         if (getSelectedItemCount()==0) {
                             Log.d("TAG SELECTED", "" + tagList.get(getAdapterPosition()).getName());//DEBUG
-                            Toast.makeText(activity.getBaseContext(), "Selected tag:" + tagList.get(getAdapterPosition()).getName(), Toast.LENGTH_SHORT).show();
-                            //notifyItemChanged(getAdapterPosition());
                             activity.startTag(tagList.get(getAdapterPosition()));
                         }
                         else{
