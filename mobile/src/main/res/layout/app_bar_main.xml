@@ -36,6 +36,7 @@
             android:layout_width="@dimen/fab_size"
             android:layout_height="@dimen/fab_size"
             android:src="@android:color/transparent"
+            app:elevation="0dp"
             android:id="@+id/fab"/>
 
         <TextView
