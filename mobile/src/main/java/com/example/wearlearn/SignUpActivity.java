@@ -84,10 +84,8 @@ public class SignUpActivity extends AppCompatActivity {
         String password = _passwordText.getText().toString();
 
 
-        RetrofitWrapper retro = new RetrofitWrapper(ADDRESS, GsonConverterFactory.create())
-                .enableCookies()
-                .enableLogging()
-                .build();
+        RetrofitWrapper retro = RetrofitWrapper.getSingleton();
+
         Authentication webService = retro.getRetrofit().create(Authentication.class);
 
         Call<ResponseBody> call = webService.postData(new RegisterDataBody(name, password, email));

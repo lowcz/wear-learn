@@ -149,10 +149,16 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_import) {
-
+        if (id == R.id.nav_word) {
+            Intent intent = new Intent(getApplicationContext(), NewWordActivity.class);
+            startActivity(intent);
+        }
+        else if (id == R.id.nav_import) {
+            Intent intent = new Intent(getApplicationContext(), OpenFileChooserActivity.class);
+            startActivity(intent);
         } else if (id == R.id.nav_settings) {
-
+            Intent intent = new Intent(getApplicationContext(), SettingsActivity.class);
+            startActivity(intent);
         } else if (id == R.id.nav_logout) {
             SharedPreferences sp=getSharedPreferences("Login", 0);
             SharedPreferences.Editor Ed=sp.edit();
@@ -227,10 +233,8 @@ public class MainActivity extends AppCompatActivity
 
         //TODO: get userID from API
         //String userID = "9aeb6f7a-b469-40bf-a76c-03e4be330a7d";
-        RetrofitWrapper retro = new RetrofitWrapper(ADDRESS, GsonConverterFactory.create())
-                .enableCookies()
-                .enableLogging()
-                .build();
+        RetrofitWrapper retro = RetrofitWrapper.getSingleton();
+
         TagList webService = retro.getRetrofit().create(TagList.class);
         //Call<List<Tag>> call = webService.getTags(userID);
         Call<List<Tag>> call = webService.getTags();
