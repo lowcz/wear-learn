@@ -233,10 +233,8 @@ public class MainActivity extends AppCompatActivity
 
         //TODO: get userID from API
         //String userID = "9aeb6f7a-b469-40bf-a76c-03e4be330a7d";
-        RetrofitWrapper retro = new RetrofitWrapper(ADDRESS, GsonConverterFactory.create())
-                .enableCookies()
-                .enableLogging()
-                .build();
+        RetrofitWrapper retro = RetrofitWrapper.getSingleton();
+
         TagList webService = retro.getRetrofit().create(TagList.class);
         //Call<List<Tag>> call = webService.getTags(userID);
         Call<List<Tag>> call = webService.getTags();

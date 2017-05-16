@@ -12,6 +12,6 @@ import retrofit2.http.POST;
  */
 
 public interface WordUpload {
-    @POST("")
+    @POST("userWord/add")
     Call<ResponseBody> postData(@Body UserWord data);
 }

@@ -110,10 +110,8 @@ public class LoginActivity extends AppCompatActivity {
 
 
 
-        RetrofitWrapper retro = new RetrofitWrapper(ADDRESS, GsonConverterFactory.create())
-                .enableCookies()
-                .enableLogging()
-                .build();
+        RetrofitWrapper retro = RetrofitWrapper.getSingleton();
+
         Authentication webService = retro.getRetrofit().create(Authentication.class);
 
         Call<ResponseBody> call = webService.postData(username, password);

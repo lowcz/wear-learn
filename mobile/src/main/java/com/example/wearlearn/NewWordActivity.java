@@ -61,10 +61,7 @@ public class NewWordActivity extends AppCompatActivity {
     }
 
     private void uploadWord() {
-        RetrofitWrapper retro = new RetrofitWrapper(ADDRESS, GsonConverterFactory.create())
-                .enableCookies()
-                .enableLogging()
-                .build();
+        RetrofitWrapper retro = RetrofitWrapper.getSingleton();
         WordUpload webService = retro.getRetrofit().create(WordUpload.class);
 
         UserWord userWord = new UserWord();

@@ -97,10 +97,7 @@ public class OpenFileChooserActivity extends AppCompatActivity {
 
         Retrofit retrofit =  builder.build();*/
 
-        RetrofitWrapper retro = new RetrofitWrapper("http://wl-api.herokuapp.com/", GsonConverterFactory.create())
-                .enableCookies()
-                .enableLogging()
-                .build();
+        RetrofitWrapper retro = RetrofitWrapper.getSingleton();
 
         //get client and call object for the request
         FileUploadService client = retro.getRetrofit().create(FileUploadService.class);
