@@ -3,6 +3,9 @@ package pojo;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by pawel on 2017-04-23.
  */
@@ -10,14 +13,29 @@ import android.os.Parcelable;
 public class Word implements Parcelable {
     private String value;
     private String translation;
+    private List<Tag> tags;
     private String id;
 
 
+    public Word(String value, String translation) {
+        this.translation = translation;
+        this.value = value;
+        this.tags = new ArrayList<>();
+    }
 
     public Word(String value, String translation, String id) {
         this.translation = translation;
         this.value = value;
         this.id = id;
+        this.tags = new ArrayList<>();
+    }
+
+    public List<Tag> getTags() {
+        return tags;
+    }
+
+    public void setTags(List<Tag> tags) {
+        this.tags = tags;
     }
 
     public String getTranslation() {
