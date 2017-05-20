@@ -42,7 +42,7 @@ public class TagActivity extends AppCompatActivity {
         else{
             tagList = intent.getParcelableArrayListExtra("TAG_LIST");
             Log.d("TAGLIST_INTENT", tagList.toString());
-            tag = new Tag("", "-1");
+            tag = new Tag("");
             List<Word> wordList = new ArrayList<>();
             for(Tag t : tagList)
                 wordList.addAll(t.getList());

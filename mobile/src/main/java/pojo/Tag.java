@@ -12,15 +12,14 @@ import java.util.List;
  * Created by pawel on 2017-04-23.
  */
 
-public class Tag implements Parcelable{
+public class Tag implements Parcelable, Comparable<Tag>{
     @SerializedName("words")
     private List<Word> list;
     private String name;
     private String id;
 
-    public Tag(String name, String id) {
+    public Tag(String name) {
         this.name = name;
-        this.id = id;
         list = new ArrayList<>();
     }
 
@@ -88,5 +87,10 @@ public class Tag implements Parcelable{
         name = in.readString();
         list = new ArrayList<>();
         in.readTypedList(list, Word.CREATOR);
+    }
+
+    @Override
+    public int compareTo(Tag o) {
+            return name.toLowerCase().compareTo(o.name.toLowerCase());
     }
 }

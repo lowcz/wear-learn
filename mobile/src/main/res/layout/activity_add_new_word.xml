@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView  xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:fitsSystemWindows="true">
+    android:background="@color/iron"
+    android:fitsSystemWindows="true"
+    android:id="@+id/screan_up">
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:orientation="vertical"
@@ -35,6 +37,8 @@
             android:inputType="textPersonName" />
 
 
+
+
         <EditText
             android:id="@+id/input_translate"
             android:layout_width="match_parent"
@@ -63,9 +67,19 @@
             android:inputType="textPersonName" />
 
         <Button
+            android:id="@+id/add_tags"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="40dp"
+            android:background="@color/notSelected"
+            android:text="Dodaj tagi" />
+
+        <Button
             android:id="@+id/add_word"
             android:layout_width="135dp"
             android:layout_height="wrap_content"
+            android:background="@color/notSelected"
+            android:layout_marginBottom="25dp"
             android:text="Dodaj" />
     </LinearLayout>
 

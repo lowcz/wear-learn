@@ -1,9 +1,13 @@
 package com.example.wearlearn;
 
+import android.app.DialogFragment;
+import android.app.FragmentManager;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -23,11 +27,15 @@ import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.NumberPicker;
 import android.widget.TextView;
+import android.widget.TimePicker;
 
 import java.util.ArrayList;
 import java.util.List;
 
+
+import DialogWindows.TimePickerFragment;
 import Interfaces.TagList;
 import butterknife.OnTextChanged;
 import pojo.Tag;
@@ -65,6 +73,7 @@ public class MainActivity extends AppCompatActivity
 
         //***************** Recycler View **********************
         ButterKnife.inject(this);
+
 
         tagAdapter = new TagAdapter(filteredTagList, this);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
@@ -143,6 +152,8 @@ public class MainActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
+
+
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
@@ -160,14 +171,19 @@ public class MainActivity extends AppCompatActivity
             Intent intent = new Intent(getApplicationContext(), SettingsActivity.class);
             startActivity(intent);
         } else if (id == R.id.nav_logout) {
-            SharedPreferences sp=getSharedPreferences("Login", 0);
+           /* SharedPreferences sp=getSharedPreferences("Login", 0);
             SharedPreferences.Editor Ed=sp.edit();
             Ed.putString("username",null );
             Ed.putString("password",null);
             Ed.commit();
             Intent intent = new Intent(this, LoginActivity.class);
             startActivity(intent);
-            finish();
+            finish();*/
+
+
+
+
+
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -210,7 +226,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void prepareTagData() {
-        Tag tag = new Tag("kuchnia", "001");
+        /*Tag tag = new Tag("kuchnia");
 
         Word word = new Word("knife", "nóż", "");
         tag.addWord(word);
@@ -227,7 +243,7 @@ public class MainActivity extends AppCompatActivity
         word = new Word("oven", "piekarnik", "");
         tag.addWord(word);
 
-        tagList.add(tag);
+        tagList.add(tag);*/
 
 
 
@@ -245,6 +261,7 @@ public class MainActivity extends AppCompatActivity
                 {
                     tagList.addAll(response.body());
                     Log.d( "onResponse", tagList.toString());
+                    filteredTagList.addAll(tagList);
                     tagAdapter.notifyDataSetChanged();
                 }
                 else
@@ -260,7 +277,8 @@ public class MainActivity extends AppCompatActivity
         });
 
 
-        filteredTagList.addAll(tagList);
+        //filteredTagList.addAll(tagList);
+        //tagAdapter.notifyDataSetChanged();
     }
 
 

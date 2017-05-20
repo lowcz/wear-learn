@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation = "vertical"
+    android:id="@+id/activity_tag"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+
+    android:background="@color/iron"
+    tools:context="com.example.wearlearn.TagActivity">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="25dp"
+        >
+
+        <EditText
+            android:id="@+id/tag_name"
+            android:layout_width="280dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:hint="Dodaj tag"
+            android:textSize="@dimen/text_card" />
+
+        <ImageButton
+            android:id="@+id/add_tag"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_marginRight="5dp"
+            android:background="@color/iron"
+            app:srcCompat="@android:drawable/ic_input_add" />
+
+
+
+
+    </RelativeLayout>
+
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycler_add_tag_word"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:layout_gravity="center_horizontal"
+        android:scrollbars="vertical" />
+
+    <Button
+        android:id="@+id/add_tag_to_word"
+        android:layout_width="135dp"
+        android:layout_height="wrap_content"
+        android:background="@color/notSelected"
+        android:layout_marginBottom="25dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="20dp"
+        android:text="Dodaj" />
+
+</LinearLayout>

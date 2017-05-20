@@ -21,7 +21,11 @@
         <activity android:name=".SignUpActivity" />
         <activity android:name=".NewWordActivity" />
         <activity android:name=".OpenFileChooserActivity" />
+        <activity android:name=".AddTagToWordActivity"
+            android:label="Wybierz tagi" />
         <activity android:name=".SettingsActivity" />
+
+
         <activity
             android:name=".MainActivity"
             android:label="@string/title_activity_main"

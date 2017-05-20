@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:fitsSystemWindows="true">
+    android:fitsSystemWindows="true"
+    android:background="@color/iron">
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
@@ -115,12 +117,33 @@
             android:text="DZIENNY CEL"
             android:textSize="20sp" />
 
-        <Spinner
 
-            android:id="@+id/dailyGoal"
+
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="12dp" />
+            android:padding="16dp"
+            >
+
+            <TextView
+                android:id="@+id/goal"
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
+                android:text="10 slowek"
+                android:textSize="15sp"
+                 />
+            <ImageButton
+                android:id="@+id/choose_goal"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                app:srcCompat="@android:drawable/arrow_down_float"
+                android:layout_alignParentEnd="true"
+                android:background="@color/iron"/>
+
+
+        </RelativeLayout>
 
 
         <TextView
@@ -139,19 +162,45 @@
             android:layout_marginBottom="12dp"
             android:text="Przypomnienia" />
 
-        <Spinner
-
-            android:id="@+id/spinner"
+        <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="12dp"
-            />
+            android:text="Godzina przypomnienia"
+            android:textSize="15sp" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            >
+
+            <TextView
+                android:id="@+id/time_reminder"
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
+                android:text="12:00"
+                android:textSize="15sp"
+                />
+            <ImageButton
+                android:id="@+id/choose_time_reminder"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                app:srcCompat="@android:drawable/arrow_down_float"
+                android:layout_alignParentEnd="true"
+                android:background="@color/iron"/>
+
+
+        </RelativeLayout>
 
         <Button
             android:id="@+id/saveSettings"
             android:layout_width="135dp"
             android:layout_height="wrap_content"
-            android:text="Zapisz" />
+            android:text="Zapisz"
+            android:background="@color/notSelected"/>
     </LinearLayout>
 
 </ScrollView>
