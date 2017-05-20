@@ -12,7 +12,9 @@ import com.example.wearlearn.MainActivity;
 import com.example.wearlearn.R;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import pojo.Tag;
 
@@ -23,8 +25,9 @@ import pojo.Tag;
 public class TagAdapter extends RecyclerView.Adapter<TagAdapter.MyViewHolder> {
     private List<Tag> tagList;
     private SparseBooleanArray selectedItems;
+    private HashMap<String, Boolean> selectedTags;
     MainActivity activity;
-
+/*
     public void toggleSelection(int pos) {
         if (selectedItems.get(pos, false)) {
             selectedItems.delete(pos);
@@ -33,18 +36,29 @@ public class TagAdapter extends RecyclerView.Adapter<TagAdapter.MyViewHolder> {
             selectedItems.put(pos, true);
         }
         notifyItemChanged(pos);
+    }*/
+    public void toggleSelection(int pos) {
+        selectedTags.put(tagList.get(pos).getId(), !selectedTags.get(tagList.get(pos).getId()));
+        notifyItemChanged(pos);
     }
 
-    public void clearSelections() {
+    /*public void clearSelections() {
         selectedItems.clear();
         notifyDataSetChanged();
-    }
+    }*/
 
-    public int getSelectedItemCount() {
+    /*public int getSelectedItemCount() {
         return selectedItems.size();
+    }*/
+    public int getSelectedItemCount() {
+        int i=0;
+        for (Boolean value : selectedTags.values())
+            if (value==true)
+                i++;
+        return i;
     }
 
-    public List<Integer> getSelectedItems() {
+    /*public List<Integer> getSelectedItems() {
         List<Integer> items =
                 new ArrayList<Integer>(selectedItems.size());
         for (int i = 0; i < selectedItems.size(); i++) {
@@ -57,7 +71,18 @@ public class TagAdapter extends RecyclerView.Adapter<TagAdapter.MyViewHolder> {
         List<Integer> items = getSelectedItems();
         ArrayList<Tag> sel = new ArrayList<> ();
         for (Integer i : items)
-            sel.add(tagList.get(items.get(i)));
+            sel.add(tagList.get(i));
+        return sel;
+    }*/
+    public ArrayList<Tag> getSelectedTags(){
+        ArrayList<Tag> sel = new ArrayList<>();
+        for (HashMap.Entry<String,Boolean> entry : selectedTags.entrySet())
+            if (entry.getValue()==true){
+                String id = entry.getKey();
+                for(Tag tag : tagList)
+                    if (tag.getId().equals(id))
+                        sel.add(tag);
+            }
         return sel;
     }
 
@@ -105,6 +130,7 @@ public class TagAdapter extends RecyclerView.Adapter<TagAdapter.MyViewHolder> {
         this.tagList = tagList;
         this.activity = activity;
         selectedItems = new SparseBooleanArray();
+        selectedTags = new HashMap<>();
     }
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -113,11 +139,20 @@ public class TagAdapter extends RecyclerView.Adapter<TagAdapter.MyViewHolder> {
         return new MyViewHolder(itemView);
         }
 
-    @Override
+    /*@Override
     public void onBindViewHolder(MyViewHolder holder, int position){
         Tag tag = tagList.get(position);
         holder.name.setText(tag.getName());
         if (selectedItems.get(position)==true)
+            holder.itemView.setBackgroundColor(activity.getResources().getColor(R.color.selected));
+        else
+            holder.itemView.setBackgroundColor(activity.getResources().getColor(R.color.notSelected));
+    }*/
+    @Override
+    public void onBindViewHolder(MyViewHolder holder, int position){
+        Tag tag = tagList.get(position);
+        holder.name.setText(tag.getName());
+        if (selectedTags.get(tag.getId())==true)
             holder.itemView.setBackgroundColor(activity.getResources().getColor(R.color.selected));
         else
             holder.itemView.setBackgroundColor(activity.getResources().getColor(R.color.notSelected));
@@ -127,7 +162,13 @@ public class TagAdapter extends RecyclerView.Adapter<TagAdapter.MyViewHolder> {
     public int getItemCount() {
         return tagList.size();
     }
-
+    public void updateAddition()
+    {
+        for (Tag tag : tagList)
+            if (!selectedTags.containsKey(tag.getId()))
+                selectedTags.put(tag.getId(), false);
+        notifyDataSetChanged();
+    }
 }
 
 
