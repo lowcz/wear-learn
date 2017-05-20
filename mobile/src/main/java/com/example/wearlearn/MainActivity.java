@@ -245,7 +245,8 @@ public class MainActivity extends AppCompatActivity
                 {
                     tagList.addAll(response.body());
                     Log.d( "onResponse", tagList.toString());
-                    tagAdapter.notifyDataSetChanged();
+                    filteredTagList.addAll(tagList);
+                    tagAdapter.updateAddition();
                 }
                 else
                 {
@@ -260,7 +261,6 @@ public class MainActivity extends AppCompatActivity
         });
 
 
-        filteredTagList.addAll(tagList);
     }
 
 
