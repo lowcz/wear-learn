@@ -7,8 +7,6 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -31,15 +29,13 @@ import java.util.List;
 import Interfaces.TagList;
 import butterknife.OnTextChanged;
 import pojo.Tag;
-import pojo.Word;
-import TagsTools.DividerItemDecoration;
-import TagsTools.TagAdapter;
+import Adapters.DividerItemDecoration;
+import Adapters.TagAdapter;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.converter.gson.GsonConverterFactory;
 import wrappers.RetrofitWrapper;
 
 public class MainActivity extends AppCompatActivity
@@ -84,6 +80,8 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onClick(View view) {
 
+                _searchText.setText("");
+                tagAdapter.notifyDataSetChanged();
                 ArrayList<Tag> sel = tagAdapter.getSelectedTags();
 
                 Intent intent = new Intent(getApplicationContext(), TagActivity.class);
@@ -210,7 +208,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void prepareTagData() {
-        Tag tag = new Tag("kuchnia", "001");
+        /*Tag tag = new Tag("kuchnia", "001");
 
         Word word = new Word("knife", "nóż", "");
         tag.addWord(word);
@@ -228,15 +226,12 @@ public class MainActivity extends AppCompatActivity
         tag.addWord(word);
 
         tagList.add(tag);
+*/
 
 
-
-        //TODO: get userID from API
-        //String userID = "9aeb6f7a-b469-40bf-a76c-03e4be330a7d";
         RetrofitWrapper retro = RetrofitWrapper.getSingleton();
 
         TagList webService = retro.getRetrofit().create(TagList.class);
-        //Call<List<Tag>> call = webService.getTags(userID);
         Call<List<Tag>> call = webService.getTags();
         call.enqueue(new Callback<List<Tag>>() {
             @Override
@@ -256,7 +251,7 @@ public class MainActivity extends AppCompatActivity
 
             @Override
             public void onFailure(Call<List<Tag>> call, Throwable t) {
-                Log.d("Failure", t.toString());
+                Log.d("Failure", t.getMessage());
             }
         });
 
@@ -274,4 +269,10 @@ public class MainActivity extends AppCompatActivity
         tagAdapter.notifyDataSetChanged();
     }
 
+    @Override
+    public void onRestart(){
+        super.onResume();
+        tagAdapter.clearSelection();
+        _fabLayout.setVisibility(View.INVISIBLE);
+    }
 }

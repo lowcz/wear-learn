@@ -12,4 +12,7 @@
     <color name="iron">#DDDDDD</color>
     <color name="jet">#222222</color>
     <color name="oil">#333333</color>
+    <color name="red">#EE3333</color>
+    <color name="redTrans">#DDff8080</color>
+    <color name="greenTrans">#DDc1db8a</color>
 </resources>
