@@ -15,6 +15,7 @@ import com.mindorks.placeholderview.SwipePlaceHolderView;
 import com.mindorks.placeholderview.listeners.ItemRemovedListener;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
@@ -56,6 +57,7 @@ public class LearningActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         userWordList = intent.getParcelableArrayListExtra("userWords");
+        Collections.shuffle(userWordList);
 
         seenUserWords = new ArrayList<>();
         for(UserWord userWord : userWordList){
@@ -89,7 +91,7 @@ public class LearningActivity extends AppCompatActivity {
                 Log.d("MAX", ""+wordCount);
 
                 if (count == 0)
-                    noMoreWords();
+                    finish();
             }
         });
 
@@ -108,13 +110,13 @@ public class LearningActivity extends AppCompatActivity {
         });
 
     }
-    private void noMoreWords(){
+    private void sendWords(){
         Log.d("test", seenUserWords.toString());
-        //TODO: send POST to api to update UserWords status
-        /*
+
         RetrofitWrapper retro = RetrofitWrapper.getSingleton();
         WordUpload webService = retro.getRetrofit().create(WordUpload.class);
-        Call<ResponseBody> call = webService.postData(seenUserWords.get(0));
+        //Call<ResponseBody> call = webService.postData(seenUserWords.get(0));
+        Call<ResponseBody> call = webService.postDataMany(seenUserWords);
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
@@ -126,10 +128,7 @@ public class LearningActivity extends AppCompatActivity {
 
             }
         });
-*/
 
-        //TODO: finish activity
-        finish();
     }
 
 
@@ -144,5 +143,6 @@ public class LearningActivity extends AppCompatActivity {
             tts.stop();
             tts.shutdown();
         }
+        sendWords();
     }
 }
