@@ -1,4 +1,4 @@
-package TagsTools;
+package Adapters;
 
 import android.content.Context;
 import android.content.res.TypedArray;

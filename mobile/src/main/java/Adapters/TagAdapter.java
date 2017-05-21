@@ -1,8 +1,7 @@
-package TagsTools;
+package Adapters;
 
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,6 +24,13 @@ public class TagAdapter extends RecyclerView.Adapter<TagAdapter.MyViewHolder> {
     private List<Tag> tagList;
     private HashMap<String, Boolean> selectedTags;
     MainActivity activity;
+
+    public void clearSelection(){
+        for (HashMap.Entry<String, Boolean> entry : selectedTags.entrySet()){
+            entry.setValue(false);
+        }
+        notifyItemRangeChanged(0, tagList.size());
+    }
 
     public void toggleSelection(int pos) {
         selectedTags.put(tagList.get(pos).getId(), !selectedTags.get(tagList.get(pos).getId()));
