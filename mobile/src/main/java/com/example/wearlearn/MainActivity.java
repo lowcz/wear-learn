@@ -26,6 +26,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
+
 import Interfaces.TagList;
 import butterknife.OnTextChanged;
 import pojo.Tag;
@@ -61,6 +62,7 @@ public class MainActivity extends AppCompatActivity
 
         //***************** Recycler View **********************
         ButterKnife.inject(this);
+
 
         tagAdapter = new TagAdapter(filteredTagList, this);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
@@ -141,6 +143,8 @@ public class MainActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
+
+
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
@@ -158,14 +162,19 @@ public class MainActivity extends AppCompatActivity
             Intent intent = new Intent(getApplicationContext(), SettingsActivity.class);
             startActivity(intent);
         } else if (id == R.id.nav_logout) {
-            SharedPreferences sp=getSharedPreferences("Login", 0);
+           /* SharedPreferences sp=getSharedPreferences("Login", 0);
             SharedPreferences.Editor Ed=sp.edit();
             Ed.putString("username",null );
             Ed.putString("password",null);
             Ed.commit();
             Intent intent = new Intent(this, LoginActivity.class);
             startActivity(intent);
-            finish();
+            finish();*/
+
+
+
+
+
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -226,7 +235,10 @@ public class MainActivity extends AppCompatActivity
         tag.addWord(word);
 
         tagList.add(tag);
-*/
+
+
+        tagList.add(tag);*/
+
 
 
         RetrofitWrapper retro = RetrofitWrapper.getSingleton();
@@ -242,6 +254,7 @@ public class MainActivity extends AppCompatActivity
                     Log.d( "onResponse", tagList.toString());
                     filteredTagList.addAll(tagList);
                     tagAdapter.updateAddition();
+
                 }
                 else
                 {

@@ -23,7 +23,7 @@ android:padding="6dp"
         <TextView
             android:layout_width="100dp"
             android:layout_height="wrap_content"
-            android:id="@+id/word_value"
+            android:id="@+id/tag_name"
             android:layout_alignParentLeft="true"
             android:textSize="@dimen/text_card"
             />
@@ -35,7 +35,7 @@ android:padding="6dp"
             android:id="@+id/word_translation"
             android:textSize="@dimen/text_card"
             android:layout_alignParentTop="true"
-            android:layout_toEndOf="@+id/word_value"
+            android:layout_toEndOf="@+id/tag_name"
             android:layout_marginStart="5dp"/>
 
         <ImageButton

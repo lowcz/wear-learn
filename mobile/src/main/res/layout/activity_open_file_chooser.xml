@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
+    android:background="@color/iron"
     android:fitsSystemWindows="true">
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -40,6 +41,7 @@
             android:id="@+id/choose_file"
             android:layout_width="135dp"
             android:layout_height="wrap_content"
+            android:background="@color/notSelected"
             android:text="Wybierz" />
     </LinearLayout>
 

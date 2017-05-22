@@ -1,5 +1,7 @@
 package com.example.wearlearn;
 
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -52,24 +54,24 @@ public class OpenFileChooserActivity extends AppCompatActivity {
 
     public void viewChooserFile() {
         new FileChooserActivity(this).setFileListener(new FileChooserActivity.FileSelectedListener() {
-            @Override public void fileSelected(final File file) {
+            @Override
+            public void fileSelected(final File file) {
                 // do something with the file
 
-                if(FilenameUtils.getExtension(file.getAbsolutePath()).equals("csv")) {
+                if (FilenameUtils.getExtension(file.getAbsolutePath()).equals("csv")) {
                     //file is .csv sent file to server
 
-
+                    uploadFile(file);
                     //TODO function send
 
 
-
-                }else{
+                } else {
                     //file isnt .csv sent file to server
                     AlertDialogActivity.alertChooseFailFile(OpenFileChooserActivity.this);
                 }
-            }}).showDialog();
-        }
-
+            }
+        }).showDialog();
+    }
 
 
     private void uploadFile(File orginalFile) {
@@ -82,13 +84,17 @@ public class OpenFileChooserActivity extends AppCompatActivity {
                 RequestBody.create(
                         MultipartBody.FORM, descriptionString);
 
+        Uri uri = Uri.fromFile(orginalFile);
+        Log.d("WYSYLAMIE", uri.getPath());
+
         RequestBody filePart =
                 RequestBody.create(
-                        MediaType.parse(getContentResolver().getType(Uri.fromFile(orginalFile))),
+                        MediaType.parse("csv"),
                         orginalFile
                 );
 
-        MultipartBody.Part file = MultipartBody.Part.createFormData("csv", orginalFile.getName(), filePart);
+        MultipartBody.Part file =
+                MultipartBody.Part.createFormData("file", orginalFile.getName(), filePart);
 
         //create Retrofit instance
         /*Retrofit.Builder builder = new Retrofit.Builder()
@@ -107,14 +113,27 @@ public class OpenFileChooserActivity extends AppCompatActivity {
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                Log.v("Upload", "success");
+                if (response.code() == 200) {
+                    onAddSuccess();
+                } else {
+                    onAddFailed();
+                }
             }
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
-                Log.e("Upload error:", t.getMessage());
+                onAddFailed();
             }
         });
 
+    }
+
+    public void onAddSuccess() {
+        //TODO zrobic wyswietlanie listy slowek dodanych
+        AlertDialogActivity.alertSuccesImportFile(OpenFileChooserActivity.this);
+    }
+
+    public void onAddFailed() {
+        AlertDialogActivity.alertFiledImportFile(OpenFileChooserActivity.this);
     }
 }

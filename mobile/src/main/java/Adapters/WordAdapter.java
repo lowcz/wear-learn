@@ -61,7 +61,7 @@ public class WordAdapter extends RecyclerView.Adapter<WordAdapter.WordViewHolder
             super(view);
             cardView = (CardView)view.findViewById(R.id.cardView);
             word_translation = (TextView)view.findViewById(R.id.word_translation);
-            word_value = (TextView)view.findViewById(R.id.word_value);
+            word_value = (TextView)view.findViewById(R.id.tag_name);
             imageButton = (ImageButton)view.findViewById(R.id.imageButton);
 
         }
