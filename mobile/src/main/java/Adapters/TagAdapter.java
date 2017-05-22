@@ -1,4 +1,4 @@
-package TagsTools;
+package Adapters;
 
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;

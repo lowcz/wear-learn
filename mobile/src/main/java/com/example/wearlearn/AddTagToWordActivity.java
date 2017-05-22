@@ -7,13 +7,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -21,14 +19,11 @@ import java.util.List;
 
 
 import Interfaces.TagList;
-import TagsTools.DividerItemDecoration;
-import TagsTools.TagAdapter;
-import TagsTools.TagChecBoxAdapter;
-import TagsTools.WordAdapter;
+import Adapters.DividerItemDecoration;
+import Adapters.TagChecBoxAdapter;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import pojo.Tag;
-import pojo.Word;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -82,6 +77,21 @@ public class AddTagToWordActivity extends AppCompatActivity {
                 if(! _tagName.getText().toString().isEmpty())
                 addTag();
                 adapter.notifyDataSetChanged();
+            }
+        });
+
+        _addTagToWord.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent();
+                ArrayList<Tag> sel = adapter.getSelectedTags();
+                intent.putParcelableArrayListExtra("TAG_LIST",sel);
+                if(!sel.isEmpty())
+                    setResult(RESULT_OK, intent);
+                else
+                    setResult(RESULT_CANCELED, intent);
+                finish();
             }
         });
 

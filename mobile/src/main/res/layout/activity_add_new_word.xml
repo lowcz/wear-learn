@@ -74,6 +74,16 @@
             android:background="@color/notSelected"
             android:text="Dodaj tagi" />
 
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/view_choose_tag"
+            android:visibility="gone"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:layout_gravity="center_horizontal"
+            android:scrollbars="vertical"
+            android:background="@color/iron"
+            android:layout_marginBottom="20dp"/>
+
         <Button
             android:id="@+id/add_word"
             android:layout_width="135dp"

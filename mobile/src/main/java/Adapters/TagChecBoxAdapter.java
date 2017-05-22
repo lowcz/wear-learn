@@ -1,17 +1,17 @@
-package TagsTools;
+package Adapters;
 
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import com.example.wearlearn.AddTagToWordActivity;
 import com.example.wearlearn.R;
-import com.example.wearlearn.TagActivity;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import pojo.Tag;
@@ -23,12 +23,14 @@ import pojo.Tag;
 
 public class TagChecBoxAdapter extends RecyclerView.Adapter<TagChecBoxAdapter.TagViewHolder> {
 
-    List<Tag> tagList;
+    static   List<Tag> tagList;
     AddTagToWordActivity activity;
+    static ArrayList<Tag> sel;
 
     public TagChecBoxAdapter(List<Tag> list, AddTagToWordActivity activity){
         this.tagList=list;
         this.activity = activity;
+        sel = new ArrayList<>();
     }
 
     @Override
@@ -52,9 +54,22 @@ public class TagChecBoxAdapter extends RecyclerView.Adapter<TagChecBoxAdapter.Ta
 
     public static class TagViewHolder extends RecyclerView.ViewHolder {
         public TextView tag_name;
+        public CheckBox choose_tag;
         public TagViewHolder(View view) {
             super(view);
             tag_name = (TextView)view.findViewById(R.id.tag_name);
+            choose_tag = (CheckBox)view.findViewById(R.id.checkBox);
+
+            choose_tag.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    if(isChecked) {
+                        sel.add(tagList.get(getAdapterPosition()));
+                    }else{
+                        sel.remove(tagList.get(getAdapterPosition()));
+                    }
+                }
+            });
 
         }
     }
@@ -63,4 +78,10 @@ public class TagChecBoxAdapter extends RecyclerView.Adapter<TagChecBoxAdapter.Ta
     public void onAttachedToRecyclerView(RecyclerView recyclerView) {
         super.onAttachedToRecyclerView(recyclerView);
     }
+
+    public ArrayList<Tag> getSelectedTags(){
+        return sel;
+    }
+
+
 }

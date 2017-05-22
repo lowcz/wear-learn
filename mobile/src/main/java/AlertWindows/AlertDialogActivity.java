@@ -80,4 +80,17 @@ public class AlertDialogActivity {
                 });
         alertDialog.show();
     }
+
+    public static void alertMustSetValue(NewWordActivity newWordActivity) {
+        AlertDialog alertDialog = new AlertDialog.Builder(newWordActivity).create();
+        alertDialog.setTitle("Podaj wymagane wartosci ! !");
+        alertDialog.setMessage("Podaj slowko, tlumaczenie oraz wybierz co najmniej jeden tag.");
+        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+        alertDialog.show();
+    }
 }

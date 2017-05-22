@@ -17,8 +17,8 @@ import java.util.Locale;
 
 import pojo.Tag;
 import pojo.Word;
-import TagsTools.DividerItemDecoration;
-import TagsTools.WordAdapter;
+import Adapters.DividerItemDecoration;
+import Adapters.WordAdapter;
 
 public class TagActivity extends AppCompatActivity {
 

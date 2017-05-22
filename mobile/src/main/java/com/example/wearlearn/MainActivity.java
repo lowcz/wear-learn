@@ -1,18 +1,12 @@
 package com.example.wearlearn;
 
-import android.app.DialogFragment;
-import android.app.FragmentManager;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -27,27 +21,22 @@ import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.widget.EditText;
 import android.widget.FrameLayout;
-import android.widget.NumberPicker;
 import android.widget.TextView;
-import android.widget.TimePicker;
 
 import java.util.ArrayList;
 import java.util.List;
 
 
-import DialogWindows.TimePickerFragment;
 import Interfaces.TagList;
 import butterknife.OnTextChanged;
 import pojo.Tag;
-import pojo.Word;
-import TagsTools.DividerItemDecoration;
-import TagsTools.TagAdapter;
+import Adapters.DividerItemDecoration;
+import Adapters.TagAdapter;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.converter.gson.GsonConverterFactory;
 import wrappers.RetrofitWrapper;
 
 public class MainActivity extends AppCompatActivity
