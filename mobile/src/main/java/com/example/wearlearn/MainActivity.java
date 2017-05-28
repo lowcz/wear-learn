@@ -250,8 +250,10 @@ public class MainActivity extends AppCompatActivity
             public void onResponse(Call<List<Tag>> call, Response<List<Tag>> response) {
                 if (response.isSuccessful())
                 {
+                    tagList.clear();
                     tagList.addAll(response.body());
                     Log.d( "onResponse", tagList.toString());
+                    filteredTagList.clear();
                     filteredTagList.addAll(tagList);
                     tagAdapter.updateAddition();
 
@@ -287,5 +289,6 @@ public class MainActivity extends AppCompatActivity
         super.onResume();
         tagAdapter.clearSelection();
         _fabLayout.setVisibility(View.INVISIBLE);
+        prepareTagData();
     }
 }
