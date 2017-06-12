@@ -182,6 +182,10 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
+    /**
+     * starts new TagActivity with single Tag
+     * @param tag
+     */
     public void startTag(Tag tag){
         Intent intent = new Intent(getApplicationContext(), TagActivity.class);
         intent.putExtra("MULTI", false);
@@ -189,6 +193,10 @@ public class MainActivity extends AppCompatActivity
         startActivity(intent);
     }
 
+    /**
+     * performs Floating Action Button fading and appearing animation based on boolean argument.
+     * @param show if true FAB appears, else it fades
+     */
     public void toggleButton(final boolean show){
         float a=0.0f, b=1.0f;
         if(!show) {
@@ -216,6 +224,9 @@ public class MainActivity extends AppCompatActivity
 
     }
 
+    /**
+     * Fetching Tags from API
+     */
     private void prepareTagData() {
         /*Tag tag = new Tag("kuchnia", "001");
 
@@ -273,7 +284,9 @@ public class MainActivity extends AppCompatActivity
 
     }
 
-
+    /**
+     * Method invoked when user changes search box text
+     */
     @OnTextChanged(R.id.search_text)
     void onSearchChanged() {
         filteredTagList.clear();

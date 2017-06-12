@@ -110,6 +110,10 @@ public class LearningActivity extends AppCompatActivity {
         });
 
     }
+
+    /**
+     * Sends List of UserWords (seenUserWords) to API
+     */
     private void sendWords(){
         Log.d("test", seenUserWords.toString());
 
@@ -131,11 +135,17 @@ public class LearningActivity extends AppCompatActivity {
 
     }
 
-
+    /**
+     * Reads given text with text-to-speech service
+     * @param text String which will be read by TTS
+     */
     public static void play(String text){
         tts.speak(text, TextToSpeech.QUEUE_FLUSH, null);
     }
 
+    /**
+     * stops TTS service. Skipping this may cause application to crash.
+     */
     @Override
     protected void onDestroy() {
         super.onDestroy();

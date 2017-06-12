@@ -13,6 +13,11 @@ import retrofit2.http.GET;
 public interface TagList {
     //@GET("tag/user/{userID}")
     //Call<List<Tag>> getTags(@Path("userID")String userID);
+
+    /**
+     * sends GET request which fetch all Tags from API
+     * @return
+     */
     @GET("tag/all")
     Call<List<Tag>> getTags();
 }

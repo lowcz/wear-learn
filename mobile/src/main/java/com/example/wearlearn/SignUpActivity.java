@@ -63,6 +63,10 @@ public class SignUpActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Method tries to sing up sending HTTP request to API.
+     * Status code specify whether that was successful or not.
+     */
     public void signup() {
         Log.d(TAG, "Signup");
 
@@ -165,6 +169,14 @@ public class SignUpActivity extends AppCompatActivity {
         _signupButton.setEnabled(true);
     }
 
+    /**
+     * performs simple validation of user's input.
+     *  checks user password's length to be in (4, 10) range
+     *  checks reentered password to match password
+     *  checks username to be at least 3 characters long
+     *  checks email to match email pattern
+     * @return whether or not validation requirements are fulfilled
+     */
     private boolean validate() {
         boolean valid = true;
 

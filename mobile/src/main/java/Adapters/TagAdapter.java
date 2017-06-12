@@ -25,6 +25,9 @@ public class TagAdapter extends RecyclerView.Adapter<TagAdapter.MyViewHolder> {
     private HashMap<String, Boolean> selectedTags;
     MainActivity activity;
 
+    /**
+     * clears selection state of tags. Used when application return to MainActivity to refresh view.
+     */
     public void clearSelection(){
         for (HashMap.Entry<String, Boolean> entry : selectedTags.entrySet()){
             entry.setValue(false);
@@ -32,11 +35,19 @@ public class TagAdapter extends RecyclerView.Adapter<TagAdapter.MyViewHolder> {
         notifyItemRangeChanged(0, tagList.size());
     }
 
+    /**
+     * toggle selection of item (Tag).
+     * @param pos specify which item should be toggled
+     */
     public void toggleSelection(int pos) {
         selectedTags.put(tagList.get(pos).getId(), !selectedTags.get(tagList.get(pos).getId()));
         notifyItemChanged(pos);
     }
 
+    /**
+     * Returns number of selected items.
+     * @return selected item count
+     */
     public int getSelectedItemCount() {
         int i=0;
         for (Boolean value : selectedTags.values())
@@ -45,6 +56,10 @@ public class TagAdapter extends RecyclerView.Adapter<TagAdapter.MyViewHolder> {
         return i;
     }
 
+    /**
+     * Returns selected Tags. Iterating through all Tags method finds selected ones.
+     * @return selected Tags (in ArrayList)
+     */
     public ArrayList<Tag> getSelectedTags(){
         ArrayList<Tag> sel = new ArrayList<>();
         for (HashMap.Entry<String,Boolean> entry : selectedTags.entrySet())
@@ -58,8 +73,9 @@ public class TagAdapter extends RecyclerView.Adapter<TagAdapter.MyViewHolder> {
     }
 
 
-
-
+    /**
+     * Inner class handles events - click and long click
+     */
     public class MyViewHolder extends RecyclerView.ViewHolder {
         public TextView name;
 
@@ -97,6 +113,11 @@ public class TagAdapter extends RecyclerView.Adapter<TagAdapter.MyViewHolder> {
             }
     }
 
+    /**
+     *
+     * @param tagList List of Tags which are displayed in RecyclerView
+     * @param activity reference to activity
+     */
     public TagAdapter(List<Tag> tagList, MainActivity activity) {
         this.tagList = tagList;
         this.activity = activity;
@@ -123,6 +144,10 @@ public class TagAdapter extends RecyclerView.Adapter<TagAdapter.MyViewHolder> {
     public int getItemCount() {
         return tagList.size();
     }
+
+    /**
+     * Refreshing view after addition to tagList.
+     */
     public void updateAddition()
     {
         for (Tag tag : tagList)

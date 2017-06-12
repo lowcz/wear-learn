@@ -13,6 +13,11 @@ import retrofit2.http.Path;
  */
 
 public interface UserWordService {
+    /**
+     * send GET request which fetch all words from given Tag
+     * @param tagId specifies Tag
+     * @return
+     */
     @GET("userWord/tag/{tagId}")
     Call<List<UserWord>> getUserWords(@Path("tagId") String tagId);
 }

@@ -13,8 +13,20 @@ import pojo.RegisterDataBody;
  */
 
 public interface Authentication {
+    /**
+     * sends register POST request with user data required to register
+     * @param data
+     * @return
+     */
     @POST("user/register")
     Call<ResponseBody> postData(@Body RegisterDataBody data);
+
+    /**
+     * sends login POST request with password and username
+     * @param password
+     * @param username
+     * @return
+     */
     @FormUrlEncoded
     @POST("login")
     Call<ResponseBody> postData(@Field("username") String password, @Field("password") String username);

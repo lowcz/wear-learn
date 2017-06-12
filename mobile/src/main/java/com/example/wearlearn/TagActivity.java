@@ -166,13 +166,26 @@ public class TagActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * Reads given text with text-to-speech service (English)
+     * @param text String which will be read by TTS
+     */
     public void playEn(String text){
         ttsEn.speak(text, TextToSpeech.QUEUE_FLUSH, null);
     }
+
+    /**
+     * Reads given text with text-to-speech service (Polish)
+     * @param text String which will be read by TTS
+     */
     public void playPl(String text){
         ttsPl.speak(text, TextToSpeech.QUEUE_FLUSH, null);
     }
 
+
+    /**
+     * stops TTS services. Skipping this may cause application to crash.
+     */
     @Override
     protected void onDestroy() {
         super.onDestroy();

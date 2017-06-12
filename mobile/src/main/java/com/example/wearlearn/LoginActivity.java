@@ -65,6 +65,9 @@ public class LoginActivity extends AppCompatActivity {
         tryAutoLogin();
     }
 
+    /**
+     * Method tries to login with stored username and password.
+     */
     private void tryAutoLogin(){
         SharedPreferences sp1=this.getSharedPreferences("Login",0);
 
@@ -75,6 +78,12 @@ public class LoginActivity extends AppCompatActivity {
             _usernameText.setText(unm);
         }
     }
+
+    /**
+     * When login is successful method stores username and password in shared preferences
+     * @param username
+     * @param password
+     */
     private void saveAutoLoginData(String username, String password){
         SharedPreferences sp=getSharedPreferences("Login", 0);
         SharedPreferences.Editor Ed=sp.edit();
@@ -105,6 +114,13 @@ public class LoginActivity extends AppCompatActivity {
         login(username, password);
 
     }
+
+    /**
+     * Method tries to log in sending HTTP request to API.
+     * Status code specify whether login was successful or not.
+     * @param username
+     * @param password
+     */
     private void login(String username, String password) {
         Log.d(TAG, "Login");
 
@@ -181,6 +197,11 @@ public class LoginActivity extends AppCompatActivity {
         _loginButton.setEnabled(true);
     }
 
+    /**
+     * Performs simple validation of user input. In our case method checks password to be in proper range (4, 10).
+     * Return value defines if further action can be done with given user's input.
+     * @return validation result
+     */
     private boolean validate() {
         boolean valid = true;
 

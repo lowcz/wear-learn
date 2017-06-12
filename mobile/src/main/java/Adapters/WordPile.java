@@ -67,6 +67,9 @@ public class WordPile {
 
     }
 
+    /**
+     * method invoked after user swipes out (left). Changes UserWordKnowledgeLevel to FORGOTTEN or it remains NEW
+     */
     @SwipeOut
     private void onSwipedOut(){
         //Log.d("EVENT", "onSwipedOut");
@@ -77,12 +80,18 @@ public class WordPile {
 
     }
 
+    /**
+     * method invoked when user cancel swipe (dropping card).
+     */
     @SwipeCancelState
     private void onSwipeCancelState(){
         //Log.d("EVENT", "onSwipeCancelState");
         mSwipeView.findViewById(R.id.cardViewPile).setBackgroundColor(mContext.getResources().getColor(R.color.notSelected));
     }
 
+    /**
+     * method invoked after user swipes in (right). Changes UserWordKnowledgeLevel to SEEN
+     */
     @SwipeIn
     private void onSwipeIn(){
         //Log.d("EVENT", "onSwipedIn");
@@ -90,12 +99,18 @@ public class WordPile {
         words.add(mUserWord);
     }
 
+    /**
+     * method invoked when user is swiping in (right). Color of the card changes.
+     */
     @SwipeInState
     private void onSwipeInState(){
         //Log.d("EVENT", "onSwipeInState");
         mSwipeView.findViewById(R.id.cardViewPile).setBackgroundColor(mContext.getResources().getColor(R.color.greenTrans));
     }
 
+    /**
+     * method invoked when user is swiping out (left). Color of the card changes.
+     */
     @SwipeOutState
     private void onSwipeOutState(){
         //Log.d("EVENT", "onSwipeOutState");
